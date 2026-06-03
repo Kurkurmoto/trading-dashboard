@@ -10,31 +10,33 @@ def home():
 @app.route("/api/history")
 def history():
 
-    symbol = request.args.get("symbol", "RELIANCE.NS")
+    try:
+        symbol = request.args.get("symbol", "RELIANCE.NS")
 
-    data = yf.download(
-        symbol,
-        period="5d",
-        interval="5m",
-        progress=False
-    )
+        data = yf.download(
+            symbol,
+            period="5d",
+            interval="5m",
+            progress=False
+        )
 
-    candles = []
+        candles = []
 
-    for index, row in data.iterrows():
-        candles.append({
-            "time": int(index.timestamp()),
-            "open": float(row["Open"]),
-            "high": float(row["High"]),
-            "low": float(row["Low"]),
-            "close": float(row["Close"])
-        })
+        for index, row in data.iterrows():
+            candles.append({
+                "time": int(index.timestamp()),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": float(row["Close"])
+            })
 
-    return jsonify({"candles": candles})
-@app.route("/test")
-def test():
-    return "Server Working"
+        return jsonify({"candles": candles})
 
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
 import os
 
 if __name__ == "__main__":
