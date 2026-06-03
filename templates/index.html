@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Trading Dashboard</title>
 
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 
 <style>
 body{
@@ -49,16 +49,16 @@ const chart = LightweightCharts.createChart(
         height: 600,
         layout: {
             background: {
-                color: '#0d1117'
+                color: "#0d1117"
             },
-            textColor: '#ffffff'
+            textColor: "#ffffff"
         },
         grid: {
             vertLines: {
-                color: '#222'
+                color: "#222"
             },
             horzLines: {
-                color: '#222'
+                color: "#222"
             }
         }
     }
@@ -68,7 +68,7 @@ const series = chart.addCandlestickSeries();
 
 async function loadData(symbol){
 
-    try{
+    try {
 
         const response =
         await fetch(`/api/history?symbol=${symbol}`);
@@ -87,7 +87,7 @@ async function loadData(symbol){
 
         chart.timeScale().fitContent();
 
-    }catch(error){
+    } catch(error){
 
         console.error(error);
 
@@ -98,7 +98,7 @@ loadData("RELIANCE.NS");
 
 document
 .getElementById("symbol")
-.addEventListener("change",(e)=>{
+.addEventListener("change", (e) => {
 
     loadData(e.target.value);
 
