@@ -2,32 +2,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <title>Trading Dashboard</title>
 
 <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 
 <style>
-
 body{
-background:#0d1117;
-margin:0;
-padding:20px;
-font-family:Arial;
-color:white;
+    background:#0d1117;
+    margin:0;
+    padding:20px;
+    font-family:Arial;
+    color:white;
 }
 
 #chart{
-height:600px;
+    width:100%;
+    height:600px;
 }
 
 select{
-padding:10px;
-margin-bottom:20px;
+    padding:10px;
+    margin-bottom:20px;
 }
-
 </style>
-
 </head>
 
 <body>
@@ -35,37 +32,66 @@ margin-bottom:20px;
 <h2>Trading Dashboard</h2>
 
 <select id="symbol">
-<option value="RELIANCE.NS">RELIANCE</option>
-<option value="TCS.NS">TCS</option>
-<option value="INFY.NS">INFY</option>
-<option value="SBIN.NS">SBIN</option>
+    <option value="RELIANCE.NS">RELIANCE</option>
+    <option value="TCS.NS">TCS</option>
+    <option value="INFY.NS">INFY</option>
+    <option value="SBIN.NS">SBIN</option>
 </select>
 
 <div id="chart"></div>
 
 <script>
 
-const chart =
-LightweightCharts.createChart(
-document.getElementById("chart"),
-{
-height:600
-}
+const chart = LightweightCharts.createChart(
+    document.getElementById("chart"),
+    {
+        width: 1200,
+        height: 600,
+        layout: {
+            background: {
+                color: '#0d1117'
+            },
+            textColor: '#ffffff'
+        },
+        grid: {
+            vertLines: {
+                color: '#222'
+            },
+            horzLines: {
+                color: '#222'
+            }
+        }
+    }
 );
 
-const series =
-chart.addCandlestickSeries();
+const series = chart.addCandlestickSeries();
 
 async function loadData(symbol){
 
-const response =
-await fetch(`/api/history?symbol=${symbol}`);
+    try{
 
-const data =
-await response.json();
+        const response =
+        await fetch(`/api/history?symbol=${symbol}`);
 
-series.setData(data.candles);
+        const data =
+        await response.json();
 
+        console.log(data);
+
+        if(data.error){
+            alert(data.error);
+            return;
+        }
+
+        series.setData(data.candles);
+
+        chart.timeScale().fitContent();
+
+    }catch(error){
+
+        console.error(error);
+
+    }
 }
 
 loadData("RELIANCE.NS");
@@ -74,7 +100,7 @@ document
 .getElementById("symbol")
 .addEventListener("change",(e)=>{
 
-loadData(e.target.value);
+    loadData(e.target.value);
 
 });
 
