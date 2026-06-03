@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import yfinance as yf
+import os
 
 app = Flask(__name__)
 
@@ -23,11 +24,18 @@ def history():
         candles = []
 
         for index, row in data.iterrows():
+
+            open_price = float(row["Open"].iloc[0]) if hasattr(row["Open"], "iloc") else float(row["Open"])
+            high_price = float(row["High"].iloc[0]) if hasattr(row["High"], "iloc") else float(row["High"])
+            low_price = float(row["Low"].iloc[0]) if hasattr(row["Low"], "iloc") else float(row["Low"])
+            close_price = float(row["Close"].iloc[0]) if hasattr(row["Close"], "iloc") else float(row["Close"])
+
             candles.append({
-               "open": float(row["Open"].iloc[0]) if hasattr(row["Open"], "iloc") else float(row["Open"]),
-"high": float(row["High"].iloc[0]) if hasattr(row["High"], "iloc") else float(row["High"]),
-"low": float(row["Low"].iloc[0]) if hasattr(row["Low"], "iloc") else float(row["Low"]),
-"close": float(row["Close"].iloc[0]) if hasattr(row["Close"], "iloc") else float(row["Close"]),
+                "time": int(index.timestamp()),
+                "open": open_price,
+                "high": high_price,
+                "low": low_price,
+                "close": close_price
             })
 
         return jsonify({"candles": candles})
@@ -36,7 +44,12 @@ def history():
         return jsonify({
             "error": str(e)
         }), 500
-import os
+
+
+@app.route("/test")
+def test():
+    return "Server Working"
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
