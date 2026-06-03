@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Trading Dashboard</title>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<style>
+
+body{
+background:#0d1117;
+margin:0;
+padding:20px;
+font-family:Arial;
+color:white;
+}
+
+#chart{
+height:600px;
+}
+
+select{
+padding:10px;
+margin-bottom:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Trading Dashboard</h2>
+
+<select id="symbol">
+<option value="RELIANCE.NS">RELIANCE</option>
+<option value="TCS.NS">TCS</option>
+<option value="INFY.NS">INFY</option>
+<option value="SBIN.NS">SBIN</option>
+</select>
+
+<div id="chart"></div>
+
+<script>
+
+const chart =
+LightweightCharts.createChart(
+document.getElementById("chart"),
+{
+height:600
+}
+);
+
+const series =
+chart.addCandlestickSeries();
+
+async function loadData(symbol){
+
+const response =
+await fetch(`/api/history?symbol=${symbol}`);
+
+const data =
+await response.json();
+
+series.setData(data.candles);
+
+}
+
+loadData("RELIANCE.NS");
+
+document
+.getElementById("symbol")
+.addEventListener("change",(e)=>{
+
+loadData(e.target.value);
+
+});
+
+</script>
+
+</body>
+</html>
