@@ -24,11 +24,10 @@ def history():
 
         for index, row in data.iterrows():
             candles.append({
-                "time": int(index.timestamp()),
-                "open": float(row["Open"]),
-                "high": float(row["High"]),
-                "low": float(row["Low"]),
-                "close": float(row["Close"])
+               "open": float(row["Open"].iloc[0]) if hasattr(row["Open"], "iloc") else float(row["Open"]),
+"high": float(row["High"].iloc[0]) if hasattr(row["High"], "iloc") else float(row["High"]),
+"low": float(row["Low"].iloc[0]) if hasattr(row["Low"], "iloc") else float(row["Low"]),
+"close": float(row["Close"].iloc[0]) if hasattr(row["Close"], "iloc") else float(row["Close"]),
             })
 
         return jsonify({"candles": candles})
