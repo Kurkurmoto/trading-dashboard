@@ -31,6 +31,9 @@ def history():
         })
 
     return jsonify({"candles": candles})
+@app.route("/test")
+def test():
+    return "Server Working"
 
 import os
 
