@@ -1,2 +1,7 @@
-Flask==3.0.3
-yfinance>=0.2.40
+flask
+flask-socketio
+eventlet
+yfinance
+pandas
+numpy
+websocket-client
